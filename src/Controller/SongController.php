@@ -13,7 +13,7 @@ class SongController extends AbstractController
     // the route should only take a wildcard number
     // that would gave a 500 error server
     // that'll gave a 404 error that's better
-    #[Route('/api/songs/{id</d+>}', methods: ['GET'])]
+    #[Route('/api/songs/{id<\d+>}', methods: ['GET'], name: 'api_songs_get_one')]
     public function getSong(int $id, LoggerInterface $logger): Response
     {
         $song = [
