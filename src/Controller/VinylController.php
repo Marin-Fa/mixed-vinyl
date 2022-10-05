@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
