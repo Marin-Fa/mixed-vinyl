@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\MixRepository;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,22 +32,11 @@ class VinylController extends AbstractController
     }
 
     #[Route('/browse/{slug}', name: 'app_browse')]
-    public function browse(HttpClientInterface $httpClient, CacheInterface $cache,string $slug = null): Response
+    public function browse(HttpClientInterface $httpClient, CacheInterface $cache, MixRepository $mixRepository, string $slug = null): Response
     {
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
-        //$mixes = $this->getMixes();
-        $mixes = $cache->get('mixes_data', function(CacheItemInterface $cacheItem) use ($httpClient) {
-            $cacheItem->expiresAfter(5);
-            $response = $httpClient->request('GET', 'https://raw.githubusercontent.com/SymfonyCasts/vinyl-mixes/main/mixes.json');
-
-            return $response->toArray();
-        });
-
-//        foreach ($mixes as $key => $mix) {
-//            // Should return a string from the ago format
-//            $mixes[$key]['ago'] = $timeFormatter->formatDiff($mix['createdAt']);
-//        }
-        //dd($mixes);
+        // Using the service MixRepository
+        $mixes = $mixRepository->findAll();
 
         return $this->render('vinyl/browse.html.twig', [
             'genre' => $genre,
