@@ -22,3 +22,8 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # => for non-autowireable argument
+    App\Service\MixRepository:
+        bind:
+            '$isDebug': '%kernel.debug%' # passing the argument isDebug set to kernel.debug
