@@ -15,7 +15,10 @@ class MixRepository
     // PHP8 new syntaxe
     public function __construct(
         private HttpClientInterface $httpClient,
-        private CacheInterface $cache)
+        private CacheInterface $cache,
+        private bool $isDebug // autowiring only works for services, we need to configure services.yaml
+
+    )
     {
         // Adding dependencies
         //$this->httpClient = $httpClient;
@@ -25,7 +28,8 @@ class MixRepository
     public function findAll(): array
     {
         return $this->cache->get('mixes_data', function(CacheItemInterface $cacheItem) {
-            $cacheItem->expiresAfter(5);
+            $cacheItem->expiresAfter($this->isDebug ? 5 : 60);
+            //$cacheItem->expiresAfter(5);
             $response = $this->httpClient->request('GET', 'https://raw.githubusercontent.com/SymfonyCasts/vinyl-mixes/main/mixes.json');
 
             return $response->toArray();
