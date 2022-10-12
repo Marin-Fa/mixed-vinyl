@@ -15,6 +15,9 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            # include types with the bind
+            'bool $isDebug': '%kernel.debug%' # passing the argument isDebug set to kernel.debug
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -31,6 +34,6 @@ services:
 
     # => for non-autowireable argument
     # => this will override the service that was created during service auto-registration
-    App\Service\MixRepository:
-        bind:
-            '$isDebug': '%kernel.debug%' # passing the argument isDebug set to kernel.debug
+    #App\Service\MixRepository:
+        #bind:
+            #'$isDebug': '%kernel.debug%' # passing the argument isDebug set to kernel.debug
