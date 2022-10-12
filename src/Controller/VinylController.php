@@ -13,6 +13,15 @@ use function Symfony\Component\String\u;
 
 class VinylController extends AbstractController
 {
+
+    public  function __construct(
+        private bool $isDebug,
+        private MixRepository $mixRepository
+    )
+    {
+
+    }
+
     #[Route('/', name: 'app_homepage')]
     public function homepage(): Response
     {
@@ -32,11 +41,12 @@ class VinylController extends AbstractController
     }
 
     #[Route('/browse/{slug}', name: 'app_browse')]
-    public function browse(HttpClientInterface $httpClient, CacheInterface $cache, MixRepository $mixRepository, string $slug = null): Response
+    public function browse(HttpClientInterface $httpClient, CacheInterface $cache, MixRepository $mixRepository, bool $isDebug, string $slug = null): Response
     {
+        dump($this->isDebug);
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
         // Using the service MixRepository
-        $mixes = $mixRepository->findAll();
+        $mixes = $this->mixRepository->findAll();
 
         return $this->render('vinyl/browse.html.twig', [
             'genre' => $genre,
