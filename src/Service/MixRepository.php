@@ -5,6 +5,7 @@ namespace App\Service;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class MixRepository
 {
@@ -13,9 +14,15 @@ class MixRepository
     //private $cache;
 
     // PHP8 new syntaxe
+    /**
+     * @param HttpClientInterface $httpClient
+     * @param CacheInterface $cache
+     * @param bool $isDebug
+     */
     public function __construct(
         private HttpClientInterface $httpClient,
         private CacheInterface $cache,
+        #[Autowire('%kernel.debug%')] // Autowire PHP8 attribute
         private bool $isDebug // autowiring only works for services, we need to configure services.yaml
 
     )
