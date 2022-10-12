@@ -37,3 +37,7 @@ services:
     #App\Service\MixRepository:
         #bind:
             #'$isDebug': '%kernel.debug%' # passing the argument isDebug set to kernel.debug
+
+    App\Service\MixRepository:
+        bind:
+            $twigDebugCommand: '@twig.command.debug'
