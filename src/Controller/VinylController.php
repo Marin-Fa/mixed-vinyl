@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\VinylMix;
 use App\Service\MixRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +15,26 @@ use function Symfony\Component\String\u;
 
 class VinylController extends AbstractController
 {
+    #[Route('/mix/new')]
+    public function new(EntityManagerInterface $entityManager): Response
+    {
+        $mix = new VinylMix();
+        $mix->setTitle('Do you Remember... Phil Collins?!');
+        $mix->setDescription('A pure mix of drummers turned singers!');
+        $mix->setGenre('pop');
+        $mix->setTrackCount(rand(5, 20));
+        $mix->setVotes(rand(-50, 50));
+
+        $entityManager->persist($mix);
+        $entityManager->flush();
+
+        return new Response(sprintf(
+            'Mix %d is %d tracks of pure 80\'s heaven',
+            $mix->getId(),
+            $mix->getTrackCount()
+        ));
+        dd($mix);
+    }
 
     public  function __construct(
         private bool $isDebug,
