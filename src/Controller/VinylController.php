@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\VinylMix;
-use App\Service\MixRepository;
+use App\Repository\VinylMixRepository;
+//use App\Service\MixRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,7 +39,7 @@ class VinylController extends AbstractController
 
     public  function __construct(
         private bool $isDebug,
-        private MixRepository $mixRepository
+        //private MixRepository $mixRepository
     )
     {
 
@@ -63,18 +64,32 @@ class VinylController extends AbstractController
     }
 
     #[Route('/browse/{slug}', name: 'app_browse')]
-    public function browse(HttpClientInterface $httpClient, CacheInterface $cache, MixRepository $mixRepository, bool $isDebug, string $slug = null): Response
+    public function browse(VinylMixRepository $mixRepository, string $slug = null): Response
     {
-        dump($this->isDebug);
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
-        // Using the service MixRepository
-        $mixes = $this->mixRepository->findAll();
+
+        //$mixes = $mixRepository->findAll();
+        $mixes = $mixRepository->findBy([], ['votes' => 'DESC']);
 
         return $this->render('vinyl/browse.html.twig', [
             'genre' => $genre,
             'mixes' => $mixes,
         ]);
     }
+
+//    public function browse(HttpClientInterface $httpClient, CacheInterface $cache, MixRepository $mixRepository, bool $isDebug, string $slug = null): Response
+//    {
+//        dump($this->isDebug);
+//        $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
+//        // Using the service MixRepository
+//        $mixes = $this->mixRepository->findAll();
+//
+//        return $this->render('vinyl/browse.html.twig', [
+//            'genre' => $genre,
+//            'mixes' => $mixes,
+//        ]);
+//    }
+
 
     private function getMixes(): array
     {

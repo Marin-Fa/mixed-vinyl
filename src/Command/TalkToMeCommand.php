@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Service\MixRepository;
+//use App\Service\MixRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,7 +19,7 @@ class TalkToMeCommand extends Command
 {
 
     public function __construct(
-        private MixRepository $mixRepository
+        //private MixRepository $mixRepository
     )
     {
         parent::__construct();
