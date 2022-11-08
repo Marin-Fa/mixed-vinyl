@@ -17,7 +17,7 @@
                 }) }}">Rock</a>
             </li>
             <li class="d-inline">
-                <a href="{{ path('app_browse', {
+                <a class="btn btn-primary btn-sm" href="{{ path('app_browse', {
                     slug: 'metal'
                 }) }}">Metal</a>
             </li>
@@ -33,7 +33,7 @@
             <div class="row">
                 {% for mix in mixes %}
                     <div class="col col-md-4">
-                        <div class="mixed-vinyl-container p-3 text-center">
+                        <a class="mixed-vinyl-container p-3 text-center" href="{{ path('app_mix_show', { id: mix.id }) }}">
                             <img src="{{ mix.getImageUrl(300) }}" alt="Mix album cover">
                             <p class="mt-2"><strong>{{ mix.title }}</strong></p>
                             <span>{{ mix.trackCount }} Tracks</span>
@@ -43,7 +43,7 @@
                             <span>{{ mix.createdAt|ago }}</span>
                             |
                             <span>{{ mix.votesString }} votes</span>
-                        </div>
+                        </a>
                     </div>
                 {% endfor %}
             </div>

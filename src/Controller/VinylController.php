@@ -16,6 +16,14 @@ use function Symfony\Component\String\u;
 
 class VinylController extends AbstractController
 {
+    public  function __construct(
+        private bool $isDebug,
+        //private MixRepository $mixRepository
+    )
+    {
+
+    }
+
     #[Route('/mix/new')]
     public function new(EntityManagerInterface $entityManager): Response
     {
@@ -38,23 +46,14 @@ class VinylController extends AbstractController
         dd($mix);
     }
 
-    #[Route('/mix/{id}')]
+    #[Route('/mix/{id}', name: 'app_mix_show')]
     public function show($id, VinylMixRepository $mixRepository): Response
     {
         $mix = $mixRepository->find($id);
-        //dd($id);
 
         return $this->render('vinyl/show.html.twig', [
             'mix' => $mix,
         ]);
-    }
-
-    public  function __construct(
-        private bool $isDebug,
-        //private MixRepository $mixRepository
-    )
-    {
-
     }
 
     #[Route('/', name: 'app_homepage')]
