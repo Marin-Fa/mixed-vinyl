@@ -22,7 +22,8 @@ class VinylController extends AbstractController
         $mix = new VinylMix();
         $mix->setTitle('Do you Remember... Phil Collins?!');
         $mix->setDescription('A pure mix of drummers turned singers!');
-        $mix->setGenre('pop');
+        $genres = ['pop', 'rock'];
+        $mix->setGenre($genres[array_rand($genres)]);
         $mix->setTrackCount(rand(5, 20));
         $mix->setVotes(rand(-50, 50));
 
@@ -35,6 +36,17 @@ class VinylController extends AbstractController
             $mix->getTrackCount()
         ));
         dd($mix);
+    }
+
+    #[Route('/mix/{id}')]
+    public function show($id, VinylMixRepository $mixRepository): Response
+    {
+        $mix = $mixRepository->find($id);
+        //dd($id);
+
+        return $this->render('vinyl/show.html.twig', [
+            'mix' => $mix,
+        ]);
     }
 
     public  function __construct(
@@ -69,7 +81,8 @@ class VinylController extends AbstractController
         $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
 
         //$mixes = $mixRepository->findAll();
-        $mixes = $mixRepository->findBy([], ['votes' => 'DESC']);
+        $mixes = $mixRepository->findAllOrderedByVotes($slug);
+        //$mixes = $mixRepository->findBy([], ['votes' => 'DESC']);
 
         return $this->render('vinyl/browse.html.twig', [
             'genre' => $genre,
