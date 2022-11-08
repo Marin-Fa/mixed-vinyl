@@ -47,14 +47,25 @@ class VinylController extends AbstractController
     }
 
     #[Route('/mix/{id}', name: 'app_mix_show')]
-    public function show($id, VinylMixRepository $mixRepository): Response
+    // For this to work, we need to install a new bundle sensio/framework-extra-bundle
+    public function show(VinylMix $mix): Response
     {
-        $mix = $mixRepository->find($id);
-
-        return $this->render('vinyl/show.html.twig', [
+        return $this->render('mix/show.html.twig', [
             'mix' => $mix,
         ]);
     }
+//    public function show($id, VinylMixRepository $mixRepository): Response
+//    {
+//        $mix = $mixRepository->find($id);
+//
+//        if (!$mix) {
+//            throw $this->createNotFoundException('Mix not found');
+//        }
+//
+//        return $this->render('vinyl/show.html.twig', [
+//            'mix' => $mix,
+//        ]);
+//    }
 
     #[Route('/', name: 'app_homepage')]
     public function homepage(): Response
