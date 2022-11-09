@@ -8,6 +8,7 @@ use App\Repository\VinylMixRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -43,14 +44,13 @@ class VinylController extends AbstractController
             $mix->getId(),
             $mix->getTrackCount()
         ));
-        dd($mix);
     }
 
     #[Route('/mix/{id}', name: 'app_mix_show')]
     // For this to work, we need to install a new bundle sensio/framework-extra-bundle
     public function show(VinylMix $mix): Response
     {
-        return $this->render('mix/show.html.twig', [
+        return $this->render('vinyl/show.html.twig', [
             'mix' => $mix,
         ]);
     }
@@ -113,6 +113,21 @@ class VinylController extends AbstractController
 //        ]);
 //    }
 
+    #[Route('/mix/{id}/vote', name: 'app_mix_vote')]
+    // Request is not a Service
+    public function vote(VinylMix $mix, Request $request): Response
+    {
+        $direction = $request->request->get('direction', 'up');
+        if ($direction === 'up') {
+            $mix->setVotes($mix->getVotes() + 1);
+        } else {
+            $mix->setVotes($mix->getVotes() - 1);
+        }
+        //dd($mix);
+        return $this->render('vinyl/show.html.twig', [
+            'mix' => $mix,
+        ]);
+    }
 
     private function getMixes(): array
     {
