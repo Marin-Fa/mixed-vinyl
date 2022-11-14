@@ -115,7 +115,7 @@ class VinylController extends AbstractController
 
     #[Route('/mix/{id}/vote', name: 'app_mix_vote')]
     // Request is not a Service
-    public function vote(VinylMix $mix, Request $request): Response
+    public function vote(VinylMix $mix, Request $request, EntityManagerInterface $entityManager): Response
     {
         $direction = $request->request->get('direction', 'up');
         if ($direction === 'up') {
@@ -124,8 +124,11 @@ class VinylController extends AbstractController
             $mix->setVotes($mix->getVotes() - 1);
         }
         //dd($mix);
-        return $this->render('vinyl/show.html.twig', [
-            'mix' => $mix,
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_mix_show', [
+            'id' => $mix->getId(),
         ]);
     }
 
