@@ -1,7 +1,17 @@
-version: '3'
+version: '3.8'
 
 services:
-###> doctrine/doctrine-bundle ###
+  server:
+    container_name: server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9000:8000"
+    volumes:
+      - ./:/var/www/html
+
+  ###> doctrine/doctrine-bundle ###
   database:
     container_name: postgres_vinyl
     image: postgres:${POSTGRES_VERSION:-14}-alpine
@@ -11,11 +21,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
       POSTGRES_USER: ${POSTGRES_USER:-app}
     volumes:
-      - db-data:/var/lib/postgresql/data:rw
+      - data_volume:/var/lib/postgresql/data/
+      - pg_volume:/docker-entrypoint-initdb.d/:ro
 
   pgadmin:
     container_name: pgadmin
-    image: "dpage/pgadmin4:6.14"
+    image: "dpage/pgadmin4:6.16"
     environment:
       POSTGRES_DB: app
       POSTGRES_HOST: postgres_vinyl
@@ -29,6 +40,7 @@ services:
       - database
 
 volumes:
-###> doctrine/doctrine-bundle ###
-  db-data:
+  ###> doctrine/doctrine-bundle ###
+  data_volume:
+  pg_volume:
 ###< doctrine/doctrine-bundle ###
